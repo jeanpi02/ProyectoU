@@ -6,9 +6,6 @@ package appasesor;
 
 import appadmin.*;
 import java.awt.BorderLayout;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -35,80 +32,7 @@ public class RegistroFacturas extends javax.swing.JPanel {
         panelTabla.revalidate();
         panelTabla.repaint();
     }
-
-    private class DateValidation {
-
-        private boolean isValid;
-        private String message;
-
-        public DateValidation(boolean isValid, String message) {
-            this.isValid = isValid;
-            this.message = message;
-        }
-
-        public boolean isValid() {
-            return isValid;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-    }
-
-    private DateValidation verificarFecha(String dia, String mes, String año) {
-        boolean fechaCorrecta = false;
-        String msg = "Fecha invalida:\n";
-        String fecha = dia + "/" + mes + "/" + año;
-
-        System.out.println("Fecha ingresada: " + fecha);
-
-        // Eliminar espacios adicionales
-        fecha = fecha.trim();
-
-        // Comprobar formato dd/MM/yyyy
-        int diaInt, mesInt, añoInt;
-        try {
-            diaInt = Integer.parseInt(dia);
-            mesInt = Integer.parseInt(mes);
-            añoInt = Integer.parseInt(año);
-        } catch (NumberFormatException e) {
-            msg += "*Los campos de fecha deben ser números válidos\n";
-            return new DateValidation(fechaCorrecta, msg);
-        }
-
-        // Validar el rango del año
-        if (añoInt < 1900 || añoInt > java.time.LocalDate.now().getYear()) {
-            msg += "*El año debe estar entre 1900 y el año actual\n";
-        }
-
-        boolean mesValid = true;
-        // Validar el rango del mes
-        if (mesInt < 1 || mesInt > 12) {
-            msg += "*El mes debe estar entre 1 y 12\n";
-            mesValid = false;
-        }
-
-        // Validar el rango del día
-        if (mesValid) {
-            if (diaInt < 1 || diaInt > diasEnMes(mesInt)) {
-                msg += "*El día debe ser válido para el mes y año dados\n";
-            }
-        }
-
-        // Si todas las comprobaciones son válidas
-        if (msg.equals("Fecha invalida:\n")) {
-            fechaCorrecta = true;
-        }
-
-        return new DateValidation(fechaCorrecta, msg);
-    }
-
-    // Método para obtener el número de días en un mes determinado de un año determinado
-    private int diasEnMes(int mes) {
-        int[] diasPorMes = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        return diasPorMes[mes - 1];
-    }
-
+    
     private void registrarFactura() {
         //obteniendo el texto escrito en los fields
         String transaccion = (String) (boxTipo.getSelectedItem());
@@ -118,13 +42,13 @@ public class RegistroFacturas extends javax.swing.JPanel {
         String dia = txfDia.getText();
         String mes = txfMes.getText();
         String año = txfAño.getText();
-        String fecha = dia + "/" + mes + "/" + año;
+        String fecha = dia + "/" + mes + "/" + año.trim();
         String costo = txfCosto.getText();
         boolean dateCorrect = false;
         boolean fieldCorrect = false;
         boolean fdateCorrect = true;
-        boolean formatDate=false;
-        
+        boolean formatDate = false;
+
         //comprobar campo de fecha
         if (dia.equals("DD")
                 || dia.equals("")
@@ -134,14 +58,10 @@ public class RegistroFacturas extends javax.swing.JPanel {
                 || año.equals("")) {
             fdateCorrect = false;
         }
-        
+
         //comprobar formato de fecha
-        if(dia.length()==2 && mes.length()==2 && año.length()==4){
-            formatDate=true;
-        }
-        
-        if(!formatDate){
-            JOptionPane.showMessageDialog(null, "Ingresar fecha en formato correcto (DD/MM/AAAA)");
+        if (dia.length() == 2 && mes.length() == 2 && año.length() == 4) {
+            formatDate = true;
         }
 
         if (transaccion.length() != 0
@@ -155,14 +75,18 @@ public class RegistroFacturas extends javax.swing.JPanel {
             fieldCorrect = true;
         }
 
+        if (!formatDate && fieldCorrect) {
+            JOptionPane.showMessageDialog(null, "Ingresar fecha en formato correcto (DD/MM/AAAA)");
+        }
+
         if (!fieldCorrect && !fdateCorrect) {
             JOptionPane.showMessageDialog(null, "Es necesario rellenar todos los campos!!!");
         }
         //verificar fecha
         DateValidation vfecha = null;
         if (fdateCorrect && formatDate) {
-            vfecha = verificarFecha(dia, mes, año);
-            dateCorrect = vfecha.isValid;
+            vfecha = vfecha.verificarFecha(dia, mes, año);
+            dateCorrect = vfecha.isValid();
         }
 
         if (!dateCorrect && fdateCorrect && fieldCorrect) {
@@ -171,6 +95,7 @@ public class RegistroFacturas extends javax.swing.JPanel {
 
         if (fieldCorrect && dateCorrect && !ocupado) {
             Factura.saveFactura(transaccion, name, id, direccion, fecha, costo);
+            //limpiar y reset variables
             txfDireccion.setText("");
             txfAño.setText("");
             txfDia.setText("");
@@ -179,8 +104,8 @@ public class RegistroFacturas extends javax.swing.JPanel {
             txfID.setText("");
             txfName.setText("");
         }
-        
-        if(ocupado && fieldCorrect && dateCorrect){
+
+        if (ocupado && fieldCorrect && dateCorrect) {
             JOptionPane.showMessageDialog(null, "----No se pueden facturar inmuebles ocupados----");
         }
     }
@@ -218,8 +143,9 @@ public class RegistroFacturas extends javax.swing.JPanel {
         }
 
     }
-    
-    boolean ocupado = false;    
+
+    boolean ocupado = true;
+
     private void buscarInmueble() {
         String direccion = txfDireccion.getText().trim();
         boolean found = false;
@@ -235,9 +161,10 @@ public class RegistroFacturas extends javax.swing.JPanel {
             for (Inmueble inmueble : inmuebles) {
                 if (direccion.equals(inmueble.getDireccion())) {
                     found = true;
-                    txfCosto.setText(String.valueOf("$"+inmueble.getPrecio()));
-                    if (!inmueble.getEstado().equals("Desocupado")) {
-                        ocupado = true;
+                    if (inmueble.getEstado().equals("Desocupado")) {
+                        ocupado = false;
+                        txfCosto.setText(String.valueOf("$" + inmueble.getPrecio()));
+                        
                     }
                     break;
                 }
