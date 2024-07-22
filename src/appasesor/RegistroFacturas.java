@@ -55,9 +55,10 @@ public class RegistroFacturas extends javax.swing.JPanel {
         }
     }
 
-    private DateValidation verificarFecha(String fecha) {
+    private DateValidation verificarFecha(String dia, String mes, String año) {
         boolean fechaCorrecta = false;
         String msg = "Fecha invalida:\n";
+        String fecha = dia + "/" + mes + "/" + año;
 
         System.out.println("Fecha ingresada: " + fecha);
 
@@ -65,45 +66,47 @@ public class RegistroFacturas extends javax.swing.JPanel {
         fecha = fecha.trim();
 
         // Comprobar formato dd/MM/yyyy
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate fechaParsed = null;
+        int diaInt, mesInt, añoInt;
         try {
-            fechaParsed = LocalDate.parse(fecha, formatter);
-        } catch (DateTimeParseException e) {
-            msg += "*Formato de fecha inválido. Use dd/MM/yyyy\n";
+            diaInt = Integer.parseInt(dia);
+            mesInt = Integer.parseInt(mes);
+            añoInt = Integer.parseInt(año);
+        } catch (NumberFormatException e) {
+            msg += "*Los campos de fecha deben ser números válidos\n";
+            return new DateValidation(fechaCorrecta, msg);
         }
 
-        // Si el formato es correcto, realizar las comprobaciones adicionales
-        // Comprobar año
-        boolean añoC = true;
-        int año = fechaParsed.getYear();
-        if (año < 1900 || año > LocalDate.now().getYear()) {
-
+        // Validar el rango del año
+        if (añoInt < 1900 || añoInt > java.time.LocalDate.now().getYear()) {
             msg += "*El año debe estar entre 1900 y el año actual\n";
         }
 
-        // Comprobar mes
-        boolean mesC = true;
-        int mes = fechaParsed.getMonthValue();
-        if (mes < 1 || mes > 12) {
-            mesC = false;
+        boolean mesValid = true;
+        // Validar el rango del mes
+        if (mesInt < 1 || mesInt > 12) {
             msg += "*El mes debe estar entre 1 y 12\n";
+            mesValid = false;
         }
 
-        // Comprobar día
-        boolean diaC = true;
-        int dia = fechaParsed.getDayOfMonth();
-        if (dia < 1 || dia > fechaParsed.lengthOfMonth()) {
-            diaC = false;
-            msg += "*El día debe ser válido para el mes dado\n";
+        // Validar el rango del día
+        if (mesValid) {
+            if (diaInt < 1 || diaInt > diasEnMes(mesInt)) {
+                msg += "*El día debe ser válido para el mes y año dados\n";
+            }
         }
 
         // Si todas las comprobaciones son válidas
-        if (añoC && diaC && mesC) {
+        if (msg.equals("Fecha invalida:\n")) {
             fechaCorrecta = true;
         }
 
         return new DateValidation(fechaCorrecta, msg);
+    }
+
+    // Método para obtener el número de días en un mes determinado de un año determinado
+    private int diasEnMes(int mes) {
+        int[] diasPorMes = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        return diasPorMes[mes - 1];
     }
 
     private void registrarFactura() {
@@ -120,7 +123,9 @@ public class RegistroFacturas extends javax.swing.JPanel {
         boolean dateCorrect = false;
         boolean fieldCorrect = false;
         boolean fdateCorrect = true;
-
+        boolean formatDate=false;
+        
+        //comprobar campo de fecha
         if (dia.equals("DD")
                 || dia.equals("")
                 || mes.equals("MM")
@@ -128,6 +133,15 @@ public class RegistroFacturas extends javax.swing.JPanel {
                 || año.equals("AAAA")
                 || año.equals("")) {
             fdateCorrect = false;
+        }
+        
+        //comprobar formato de fecha
+        if(dia.length()==2 && mes.length()==2 && año.length()==4){
+            formatDate=true;
+        }
+        
+        if(!formatDate){
+            JOptionPane.showMessageDialog(null, "Ingresar fecha en formato correcto (DD/MM/AAAA)");
         }
 
         if (transaccion.length() != 0
@@ -146,16 +160,16 @@ public class RegistroFacturas extends javax.swing.JPanel {
         }
         //verificar fecha
         DateValidation vfecha = null;
-        if (fdateCorrect) {
-            vfecha = verificarFecha(fecha);
+        if (fdateCorrect && formatDate) {
+            vfecha = verificarFecha(dia, mes, año);
             dateCorrect = vfecha.isValid;
         }
 
-        if (!dateCorrect && fdateCorrect) {
+        if (!dateCorrect && fdateCorrect && fieldCorrect) {
             JOptionPane.showMessageDialog(null, vfecha.getMessage());
         }
 
-        if (fieldCorrect && dateCorrect && fdateCorrect) {
+        if (fieldCorrect && dateCorrect && !ocupado) {
             Factura.saveFactura(transaccion, name, id, direccion, fecha, costo);
             txfDireccion.setText("");
             txfAño.setText("");
@@ -164,6 +178,10 @@ public class RegistroFacturas extends javax.swing.JPanel {
             txfCosto.setText("");
             txfID.setText("");
             txfName.setText("");
+        }
+        
+        if(ocupado && fieldCorrect && dateCorrect){
+            JOptionPane.showMessageDialog(null, "----No se pueden facturar inmuebles ocupados----");
         }
     }
 
@@ -200,11 +218,11 @@ public class RegistroFacturas extends javax.swing.JPanel {
         }
 
     }
-
+    
+    boolean ocupado = false;    
     private void buscarInmueble() {
         String direccion = txfDireccion.getText().trim();
         boolean found = false;
-        boolean ocupado = false;
         boolean fieldCorrect = false;
 
         Inmueble[] inmuebles = Inmueble.loadInmuebles();
@@ -217,7 +235,7 @@ public class RegistroFacturas extends javax.swing.JPanel {
             for (Inmueble inmueble : inmuebles) {
                 if (direccion.equals(inmueble.getDireccion())) {
                     found = true;
-                    txfCosto.setText(String.valueOf(inmueble.getPrecio()));
+                    txfCosto.setText(String.valueOf("$"+inmueble.getPrecio()));
                     if (!inmueble.getEstado().equals("Desocupado")) {
                         ocupado = true;
                     }
@@ -368,6 +386,8 @@ public class RegistroFacturas extends javax.swing.JPanel {
                 bntBIActionPerformed(evt);
             }
         });
+
+        panelTabla.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout panelTablaLayout = new javax.swing.GroupLayout(panelTabla);
         panelTabla.setLayout(panelTablaLayout);

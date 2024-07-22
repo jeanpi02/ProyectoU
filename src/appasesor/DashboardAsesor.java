@@ -202,7 +202,6 @@ public class DashboardAsesor extends javax.swing.JFrame {
         btnCs.setBackground(new java.awt.Color(51, 51, 255));
         btnCs.setForeground(new java.awt.Color(255, 255, 255));
         btnCs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/cerrar-sesion.png"))); // NOI18N
-        btnCs.setText("Cerrar sesión");
         btnCs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCsActionPerformed(evt);
@@ -222,7 +221,7 @@ public class DashboardAsesor extends javax.swing.JFrame {
                     .addGroup(headerLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(usrActual)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(btnCs))))
         );
         headerLayout.setVerticalGroup(

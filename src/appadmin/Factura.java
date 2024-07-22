@@ -120,7 +120,7 @@ public class Factura {
             bw.write(me + "\r\n");
 
             System.out.println("Registro realizado");
-            JOptionPane.showMessageDialog(null, "¡Factura registrado con éxito!");
+            JOptionPane.showMessageDialog(null, "¡Factura registrada con éxito!");
 
             bw.close();
 

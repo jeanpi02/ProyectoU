@@ -252,7 +252,7 @@ public class Login extends javax.swing.JFrame {
                     d.setVisible(true);
                     this.dispose();
                 } else if (usuario.getRole().equals("Asesor")) {
-                    DashboardAsesor d = new DashboardAsesor(usuario.getName()) ;
+                    DashboardAsesor d = new DashboardAsesor(usuario.getName());
                     d.setVisible(true);
                     this.dispose();
                 }
