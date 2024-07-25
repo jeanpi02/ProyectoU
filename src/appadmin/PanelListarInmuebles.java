@@ -39,48 +39,15 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
     }
 
     private void listarPorfecha() {
-        String dia = txfDia.getText();
-        String mes = txfMes.getText();
-        String año = txfAño.getText();
-        String fecha = dia + "/" + mes + "/" + año.trim();
-        boolean fdateCorrect = false;
-        boolean formatDate = false;
-        boolean dateCorrect = false;
-
-        if (dia.equals("DD")
-                || dia.equals("")
-                || mes.equals("MM")
-                || mes.equals("")
-                || año.equals("AAAA")
-                || año.equals("")) {
-            fdateCorrect = false;
-        }
-
-        //comprobar formato de fecha
-        if (dia.length() == 2 && mes.length() == 2 && año.length() == 4) {
-            formatDate = true;
-        }
-
-        if (!formatDate) {
-            JOptionPane.showMessageDialog(null, "Ingresar fecha en formato correcto (DD/MM/AAAA)");
-        }
-        //verificar fecha
-        DateValidation vfecha = null;
-        if (fdateCorrect && formatDate) {
-            vfecha = vfecha.verificarFecha(dia, mes, año);
-            dateCorrect = vfecha.isValid();
-        }
-        
-        if (!dateCorrect && fdateCorrect) {
-            JOptionPane.showMessageDialog(null, vfecha.getMessage());
-        }
-        
-        if(dateCorrect){
-            showTable(new TablaBusquedaFF(fecha));
-        }
+        String fecha = txfDate.getText();
+        showTable(new TablaBusquedaFF(fecha));
 
     }
-
+    
+    private void listarPorID(){
+        long id = Integer.valueOf(txfID.getText());
+        showTable(new TablaBusquedaFF(id));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -90,6 +57,7 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        dateChooser1 = new com.raven.datechooser.DateChooser();
         contenido = new javax.swing.JPanel();
         titulo = new javax.swing.JLabel();
         btnDesocupados = new javax.swing.JButton();
@@ -98,11 +66,14 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
         jlBtn2 = new javax.swing.JLabel();
         jlBtn3 = new javax.swing.JLabel();
         btnId = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        txfID = new javax.swing.JTextField();
         Rbusqueda = new javax.swing.JPanel();
-        txfDia = new javax.swing.JTextField();
-        txfMes = new javax.swing.JTextField();
-        txfAño = new javax.swing.JTextField();
+        txfDate = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+
+        dateChooser1.setForeground(new java.awt.Color(0, 51, 255));
+        dateChooser1.setTextRefernce(txfDate);
 
         contenido.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -137,10 +108,15 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
 
         btnId.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/personas.png"))); // NOI18N
         btnId.setText("Buscar por ID");
+        btnId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIdActionPerformed(evt);
+            }
+        });
 
-        jTextField1.setForeground(new java.awt.Color(153, 153, 153));
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("Ingresar ID");
+        txfID.setForeground(new java.awt.Color(153, 153, 153));
+        txfID.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txfID.setText(" ");
 
         Rbusqueda.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -155,24 +131,20 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
             .addGap(0, 273, Short.MAX_VALUE)
         );
 
-        txfDia.setText("DD");
-        txfDia.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                txfDiaMousePressed(evt);
+        txfDate.setForeground(new java.awt.Color(0, 0, 0));
+        txfDate.setFocusable(false);
+
+        jButton2.setText("...");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
-        txfMes.setText("MM");
-        txfMes.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                txfMesMousePressed(evt);
-            }
-        });
-
-        txfAño.setText("AAAA");
-        txfAño.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                txfAñoMousePressed(evt);
+        jButton3.setText("Hoy");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -184,14 +156,14 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
                 .addGap(120, 120, 120)
                 .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(contenidoLayout.createSequentialGroup()
-                .addGap(265, 265, 265)
-                .addComponent(txfDia, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txfMes, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txfAño, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(82, 82, 82)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(232, 232, 232)
+                .addComponent(txfDate, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jButton3)
+                .addGap(43, 43, 43)
+                .addComponent(txfID, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(Rbusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(contenidoLayout.createSequentialGroup()
                 .addGroup(contenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -232,13 +204,13 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
                 .addGroup(contenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(contenidoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txfID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(contenidoLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(contenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txfDia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txfMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txfAño, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(contenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txfDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2)
+                            .addComponent(jButton3))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Rbusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -259,21 +231,21 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
         showTable(new TablaIDesocupados());
     }//GEN-LAST:event_btnDesocupadosActionPerformed
 
-    private void txfDiaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txfDiaMousePressed
-        txfDia.setText("");
-    }//GEN-LAST:event_txfDiaMousePressed
-
-    private void txfMesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txfMesMousePressed
-        txfMes.setText("");
-    }//GEN-LAST:event_txfMesMousePressed
-
-    private void txfAñoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txfAñoMousePressed
-        txfAño.setText("");
-    }//GEN-LAST:event_txfAñoMousePressed
-
     private void btnFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFechaActionPerformed
         listarPorfecha();
     }//GEN-LAST:event_btnFechaActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        dateChooser1.showPopup();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        dateChooser1.toDay();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void btnIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIdActionPerformed
+        listarPorID();
+    }//GEN-LAST:event_btnIdActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -282,13 +254,14 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
     private javax.swing.JButton btnFecha;
     private javax.swing.JButton btnId;
     private javax.swing.JPanel contenido;
-    private javax.swing.JTextField jTextField1;
+    private com.raven.datechooser.DateChooser dateChooser1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jlBtn1;
     private javax.swing.JLabel jlBtn2;
     private javax.swing.JLabel jlBtn3;
     private javax.swing.JLabel titulo;
-    private javax.swing.JTextField txfAño;
-    private javax.swing.JTextField txfDia;
-    private javax.swing.JTextField txfMes;
+    private javax.swing.JTextField txfDate;
+    private javax.swing.JTextField txfID;
     // End of variables declaration//GEN-END:variables
 }

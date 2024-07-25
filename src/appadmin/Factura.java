@@ -21,12 +21,12 @@ public class Factura {
 
     private String transaccion;
     private String name;
-    private String id;
+    private long id;
     private String direccion;
     private String fecha;
     private String costo;
 
-    public Factura(String transaccion, String name, String id, String direccion, String fecha, String costo) {
+    public Factura(String transaccion, String name, long id, String direccion, String fecha, String costo) {
         this.transaccion = transaccion;
         this.name = name;
         this.id = id;
@@ -43,7 +43,7 @@ public class Factura {
         return name;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
@@ -88,7 +88,7 @@ public class Factura {
                 while ((line = br.readLine()) != null) {
                     String[] parts = line.split(";");
                     if (parts.length == 6) {
-                        facturas[index++] = new Factura(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
+                        facturas[index++] = new Factura(parts[0], parts[1], Long.valueOf(parts[2]), parts[3], parts[4], parts[5]);
 
                     }
                 }

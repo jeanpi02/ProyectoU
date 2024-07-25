@@ -40,7 +40,7 @@ public class DashboardAsesor extends javax.swing.JFrame {
 
     private void showJpanel(JPanel p) {
 
-        p.setSize(750, 490);
+        p.setSize(750, 500);
         p.setLocation(0, 0);
 
         contenido.removeAll();
@@ -228,7 +228,7 @@ public class DashboardAsesor extends javax.swing.JFrame {
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(usrActual)
                     .addComponent(btnCs))
                 .addGap(5, 5, 5)

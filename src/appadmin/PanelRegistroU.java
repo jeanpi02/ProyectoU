@@ -27,17 +27,12 @@ public class PanelRegistroU extends javax.swing.JPanel {
 
     private PasswordValidation verificarContraseña(String contraseña) {
         boolean passCorrect = false;
-        String contraseñaA[] = new String[contraseña.length()];
         String msg = "Contraseña invalida:\n";
 
-        //Convertir contraseña en array
-        for (int i = 0; i < contraseña.length(); i++) {
-            contraseñaA[i] = String.valueOf(contraseña.charAt(i));
-        }
 
         //comprobar 8 carácteres
         boolean tiene8c = false;
-        if (contraseñaA.length >= 8) {
+        if (contraseña.length() >= 8) {
             tiene8c = true;
             System.out.println("Tiene 8 o más caracteres");
         } else {
