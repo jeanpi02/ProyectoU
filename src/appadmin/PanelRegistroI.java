@@ -19,42 +19,112 @@ public class PanelRegistroI extends javax.swing.JPanel {
         initComponents();
         initStyles();
     }
-    
-    private void initStyles(){
-        titulo.putClientProperty( "FlatLaf.styleClass", "h1" );
+
+    private void initStyles() {
+        titulo.putClientProperty("FlatLaf.styleClass", "h1");
     }
-    
-    private void añadirInmueble(){
+
+    private void añadirInmueble() {
         //obteniendo el texto escrito en los fields
         String estado = (String) (boxTipo.getSelectedItem());
-        String direccion= txfDireccion.getText();
-        String telefono= txfTelefono.getText();
+        String direccion = txfDireccion.getText();
+        String telefono = txfTelefono.getText();
         String areaTotal = txfArea.getText();
         String precio = txfPrecio.getText();
         String barrio = txfBarrio.getText();
-        String documento= txfDocumento.getText();
-        int nAlcobas = Integer.parseInt(txfNalcobas.getText());
+        String documento = txfDocumento.getText();
         boolean fieldCorrect = false;
-        
-        if (estado.length()!=0
-                && direccion.length()!=0
-                && telefono.length()!=0
-                && areaTotal.length()!=0
-                && precio.length()!=0
-                && barrio.length()!=0
-                && documento.length()!=0
+
+        ///////////////////////////////////////AÑADIDO//////////////////////////////////////////////////////////// 
+        //Validacion de campos (n alcobas)
+        int nAlcobas = 0;
+        boolean numCorrect = true;
+        try {
+            // Intentar convertir la cadena a un entero
+            nAlcobas = Integer.valueOf(txfNalcobas.getText());
+        } catch (NumberFormatException e) {
+            // Manejar la excepción si la conversión falla
+            numCorrect = false;
+        }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        if (estado.length() != 0
+                && direccion.length() != 0
+                && telefono.length() != 0
+                && areaTotal.length() != 0
+                && precio.length() != 0
+                && barrio.length() != 0
+                && documento.length() != 0
                 && !estado.equals("Seleccionar")
-                && nAlcobas!=0){
+                && nAlcobas != 0) {
 
             fieldCorrect = true;
         }
-        
-        if (!fieldCorrect) {
+
+        /////////////////////////////////////AÑADIDO y MODIFICADO///////////////////////////////////////////////////     
+        if (!fieldCorrect && numCorrect) {
             JOptionPane.showMessageDialog(null, "Es necesario rellenar todos los campos!!!");
         }
-        
+        if (!fieldCorrect && !numCorrect) {
+            JOptionPane.showMessageDialog(null, "Error: Ingresar número entero valido para cantidad de alcobas");
+        }
+//////////////////////////////////////////////AÑADIDO//////////////////////////////////////////////////////
+        //Validacion de campos(telefono, documento)
+        boolean tlfIDcorrect = false;
         if (fieldCorrect) {
-            Inmueble.saveInmueble(estado,documento, direccion,barrio ,telefono, areaTotal,nAlcobas, Double.parseDouble(txfPrecio.getText()));
+            
+            boolean tlfLetram = false;
+            boolean tlfLetraM = false;
+            char tlfm;
+            boolean tieneletraM = false;
+            for (int i = 0; i < telefono.length(); i++) {
+                tlfm = telefono.charAt(i);
+                if (tlfm >= 'a' && tlfm <= 'z') {
+                    tlfLetram = true;
+                }
+            }
+            
+            char tlfM;
+            for (int i = 0; i < telefono.length(); i++) {
+                tlfM = telefono.charAt(i);
+                if (tlfM >= 'A' && tlfM <= 'Z') {
+                    tlfLetraM = true;
+                }
+            }
+
+            if (tlfLetram || tlfLetraM) {
+                JOptionPane.showMessageDialog(null, "El numero de telefono no debe contener letras");
+            }
+
+            boolean tieneletram = false;
+            char lm;
+            for (int i = 0; i < documento.length(); i++) {
+                lm = documento.charAt(i);
+                if (lm >= 'a' && lm <= 'z') {
+                    tieneletram = true;
+                }
+            }
+            
+            char lM;
+            for (int i = 0; i < documento.length(); i++) {
+                lM = documento.charAt(i);
+                if (lM >= 'A' && lM <= 'Z') {
+                    tieneletraM = true;
+                }
+            }
+
+            if (tieneletram || tieneletraM) {
+                JOptionPane.showMessageDialog(null, "El ID no debe contener letras");
+            }
+
+            if (!tieneletram && !tieneletraM && !tlfLetram && !tlfLetraM) {
+                tlfIDcorrect = true;
+            }
+        }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        if (fieldCorrect && tlfIDcorrect) {
+            Inmueble.saveInmueble(estado, documento, direccion, barrio, telefono, areaTotal, nAlcobas, Double.parseDouble(txfPrecio.getText()));
             txfDireccion.setText("");
             txfTelefono.setText("");
             txfArea.setText("");
@@ -63,12 +133,7 @@ public class PanelRegistroI extends javax.swing.JPanel {
             txfNalcobas.setText("");
             txfDocumento.setText("");
         }
-        
-        
-        
-        
 
-        
     }
 
     /**

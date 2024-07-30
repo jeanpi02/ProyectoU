@@ -22,11 +22,13 @@ public class DashboardAsesor extends javax.swing.JFrame {
     /**
      * Creates new form DashboardAmin
      */
+    public DashboardAsesor(){
+        
+    }
     public DashboardAsesor(String user) {
         initComponents();
         initStyles();
         usrActual.setText(user);
-
     }
 
     private void initStyles() {
@@ -38,7 +40,7 @@ public class DashboardAsesor extends javax.swing.JFrame {
         }
     }
 
-    private void showJpanel(JPanel p) {
+    public void showJpanel(JPanel p) {
 
         p.setSize(750, 500);
         p.setLocation(0, 0);

@@ -45,7 +45,12 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
     }
     
     private void listarPorID(){
-        long id = Integer.valueOf(txfID.getText());
+        long id=0;
+        try{
+        id= Long.valueOf(txfID.getText().trim());
+        }catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null,"Ingresar número de ID válido!!!");
+        }
         showTable(new TablaBusquedaFF(id));
     }
     /**
@@ -116,7 +121,6 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
 
         txfID.setForeground(new java.awt.Color(153, 153, 153));
         txfID.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txfID.setText(" ");
 
         Rbusqueda.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -162,8 +166,8 @@ public class PanelListarInmuebles extends javax.swing.JPanel {
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(jButton3)
-                .addGap(43, 43, 43)
-                .addComponent(txfID, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(70, 70, 70)
+                .addComponent(txfID, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(Rbusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(contenidoLayout.createSequentialGroup()
                 .addGroup(contenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)

@@ -29,7 +29,6 @@ public class PanelRegistroU extends javax.swing.JPanel {
         boolean passCorrect = false;
         String msg = "Contraseña invalida:\n";
 
-
         //comprobar 8 carácteres
         boolean tiene8c = false;
         if (contraseña.length() >= 8) {
@@ -159,24 +158,56 @@ public class PanelRegistroU extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, pv.msg);
             password = "";
         }
-      
 
-        if (fieldCorrect && correctPass && !userExits) {
+//////////////////////////////////////////AÑADIDO//////////////////////////////////////////////////////////
+        //Validacion de campos (nombre, ID)
+        boolean nameIDcorrect = false;
+        boolean tieneletram = false;
+        char lm;
 
-//            // Cargar usuarios existentes
-//            Usuario[] usuarios = Usuario.loadUsuarios();
-//
-//            // Crear un nuevo array con tamaño incrementado en 1
-//            Usuario[] nuevosUsuarios = new Usuario[usuarios.length + 1];
-//
-//            // Copiar los usuarios existentes al nuevo array
-//            System.arraycopy(usuarios, 0, nuevosUsuarios, 0, usuarios.length);
-//
-//            // Añadir el nuevo usuario al final del nuevo array
-//            nuevosUsuarios[usuarios.length] = new Usuario(name, username, password, role);
-//
-//            // Guardar el nuevo array de usuarios
-//            Usuario.saveUsuarios(nuevosUsuarios);
+        if (fieldCorrect) {
+
+            for (int i = 0; i < username.length(); i++) {
+                lm = username.charAt(i);
+                if (lm >= 'a' && lm <= 'z') {
+                    tieneletram = true;
+                }
+            }
+            boolean tieneletraM = false;
+            char lM;
+            for (int i = 0; i < username.length(); i++) {
+                lM = username.charAt(i);
+                if (lM >= 'A' && lM <= 'Z') {
+                    tieneletraM = true;
+                }
+            }
+
+            if (tieneletram || tieneletraM) {
+                JOptionPane.showMessageDialog(null, "El ID no debe contener letras");
+            }
+
+            boolean tieneNumero = false;
+            char c;
+            //Comprobar dígito
+            for (int i = 0; i < name.length(); i++) {
+                c = name.charAt(i);
+                if (c >= '0' && c <= '9') {
+                    tieneNumero = true;
+                }
+            }
+
+            if (tieneNumero) {
+                JOptionPane.showMessageDialog(null, "El nombre no debe contener numeros");
+            }
+
+            if (!tieneletram && !tieneletraM && !tieneNumero) {
+                nameIDcorrect = true;
+            }
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        if (fieldCorrect && correctPass && !userExits && nameIDcorrect) {
+
             Usuario.saveUsers(name, username, password, role);
 
             RnameTxt.setText("");

@@ -5,6 +5,7 @@
 package appasesor;
 
 import appadmin.*;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -22,7 +23,7 @@ public class RegistroFacturas extends javax.swing.JPanel {
     }
     DefaultTableModel model;
     String inmueblesF = "";
-
+    
     private void registrarFactura() {
         //obteniendo el texto escrito en los fields
         String transaccion = (String) (boxTipo.getSelectedItem());
@@ -68,7 +69,6 @@ public class RegistroFacturas extends javax.swing.JPanel {
         String id = txfID.getText();
         boolean found = false;
         boolean fieldCorrect = false;
-
         Cliente[] clientes = Cliente.loadClientes();
 
         if (id.length() != 0) {
@@ -94,6 +94,7 @@ public class RegistroFacturas extends javax.swing.JPanel {
         if (fieldCorrect && !found) {
             JOptionPane.showMessageDialog(null, "No se encontró el cliente [" + id + "]"
                     + " por favor registrarlo");
+
         }
 
     }
@@ -140,7 +141,7 @@ public class RegistroFacturas extends javax.swing.JPanel {
             System.out.println("Error: Ingresar número entero valido para cantidad");
 
         }
-        
+
         Inmueble[] inmuebles = Inmueble.loadInmuebles();
 
         for (Inmueble inmueble : inmuebles) {

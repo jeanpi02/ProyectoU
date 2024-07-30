@@ -20,12 +20,6 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-        initStyles();
-    }
-
-    private void initStyles() {
-        nombre.putClientProperty("FlatLaf.styleClass", "h1");
-
     }
 
     /**
@@ -60,7 +54,7 @@ public class Login extends javax.swing.JFrame {
 
         logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/casa.png"))); // NOI18N
 
-        nombre.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
+        nombre.setFont(new java.awt.Font("Abyssinica SIL", 1, 36)); // NOI18N
         nombre.setForeground(new java.awt.Color(255, 255, 255));
         nombre.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nombre.setText("<html>HOGAR IDEAL<br/>INMOBILIARIA</html>\"");

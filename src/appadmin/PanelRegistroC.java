@@ -32,8 +32,7 @@ public class PanelRegistroC extends javax.swing.JPanel {
         String telefono = txfTelefono.getText();
 
         boolean fieldCorrect = false;
-        if (
-                id.length() != 0
+        if (id.length() != 0
                 && direccion.length() != 0
                 && telefono.length() != 0
                 && name.length() != 0
@@ -45,15 +44,103 @@ public class PanelRegistroC extends javax.swing.JPanel {
         if (!fieldCorrect) {
             JOptionPane.showMessageDialog(null, "Es necesario rellenar todos los campos!!!");
         }
-        
-        if(fieldCorrect){
+
+        //////////////////////////////////////AÑADIDO/////////////////////////////////////////////////////////////       
+        //Evaluacion de campos (ID, nombre, telefono y correo)
+        boolean nameIDcorrect = false;
+        boolean tieneletram = false;
+        char lm;
+        boolean emailCorrect = false;
+        boolean emailpunto = false;
+        boolean emailarroba = false;
+        if (fieldCorrect) {
+            for (int i = 0; i < id.length(); i++) {
+                lm = id.charAt(i);
+                if (lm >= 'a' && lm <= 'z') {
+                    tieneletram = true;
+                }
+            }
+            boolean tieneletraM = false;
+            char lM;
+            for (int i = 0; i < id.length(); i++) {
+                lM = id.charAt(i);
+                if (lM >= 'A' && lM <= 'Z') {
+                    tieneletraM = true;
+                }
+            }
+
+            if (tieneletram || tieneletraM) {
+                JOptionPane.showMessageDialog(null, "El ID no debe contener letras");
+            }
+
+            boolean tieneNumero = false;
+            char c;
+            //Comprobar dígito
+            for (int i = 0; i < name.length(); i++) {
+                c = name.charAt(i);
+                if (c >= '0' && c <= '9') {
+                    tieneNumero = true;
+                }
+            }
+
+            if (tieneNumero) {
+                JOptionPane.showMessageDialog(null, "El nombre no debe contener numeros");
+            }
+
+            boolean tlfLetram = false;
+            char tlfm;
+            for (int i = 0; i < telefono.length(); i++) {
+                tlfm = telefono.charAt(i);
+                if (tlfm >= 'a' && tlfm <= 'z') {
+                    tlfLetram = true;
+                }
+            }
+            boolean tlfLetraM = false;
+            char tlfM;
+            for (int i = 0; i < telefono.length(); i++) {
+                tlfM = telefono.charAt(i);
+                if (tlfM >= 'A' && tlfM <= 'Z') {
+                    tlfLetraM = true;
+                }
+            }
+
+            if (tlfLetram || tlfLetraM) {
+                JOptionPane.showMessageDialog(null, "El numero de telefono no debe contener letras");
+            }
+
+            if (!tieneletram && !tieneletraM && !tieneNumero && !tlfLetram && !tlfLetraM) {
+                nameIDcorrect = true;
+            }
+
+            char email;
+            for (int i = 0; i < correo.length(); i++) {
+                email = correo.charAt(i);
+                if (email == '@') {
+                    emailarroba = true;
+                }
+                if (email == '.') {
+                    emailpunto = true;
+                }
+            }
+
+            if (emailarroba && emailpunto) {
+                emailCorrect = true;
+            }
+
+            if (!emailCorrect) {
+                JOptionPane.showMessageDialog(null, "El correo debe tener punto '.' y arroba '@'");
+            }
+        }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////   
+
+        if (fieldCorrect && nameIDcorrect && emailCorrect) {
             Cliente.saveCliente(id, name, correo, direccion, telefono);
             txfDocumento.setText("");
             txfName.setText("");
             txfCorreo.setText("");
             txfDireccion.setText("");
             txfTelefono.setText("");
-            
+
         }
     }
 

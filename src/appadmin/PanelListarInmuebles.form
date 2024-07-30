@@ -59,8 +59,8 @@
                   <Component id="jButton2" min="-2" pref="35" max="-2" attributes="0"/>
                   <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
                   <Component id="jButton3" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
-                  <Component id="txfID" min="-2" pref="150" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
+                  <Component id="txfID" min="-2" pref="113" max="-2" attributes="0"/>
               </Group>
               <Component id="Rbusqueda" min="-2" max="-2" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
@@ -203,7 +203,6 @@
               <Color blue="99" green="99" red="99" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value=" "/>
           </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="Rbusqueda">
